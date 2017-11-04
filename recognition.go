@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"crypto/cipher"
 	"crypto/aes"
-	"encoding/hex"
 )
 
 type ContentHeader struct {
@@ -33,7 +32,7 @@ type PubkFormat struct {
 	_          [16]byte // "AES Reserved"
 }
 
-func Extract(file []byte, pubk []byte) {
+func Extract(file []byte, pubk []byte) (decrypted []byte) {
 	// The content header is always a certain length, so the file needs to be larger.
 	if 0x140 > len(file) {
 		panic("File seems too small.")
@@ -79,10 +78,10 @@ func Extract(file []byte, pubk []byte) {
 		panic(err)
 	}
 
-	decrypted := make([]byte, len(file)-0x140)
+	decryptedBuf := make([]byte, len(file)-0x140)
 
 	stream := cipher.NewOFB(block, contentHeader.IV[:])
 	// Skip into 0x140 as that's where content starts
-	stream.XORKeyStream(decrypted, file[0x140:])
-	log.Print(hex.EncodeToString(decrypted))
+	stream.XORKeyStream(decryptedBuf, file[0x140:])
+	return decryptedBuf
 }
