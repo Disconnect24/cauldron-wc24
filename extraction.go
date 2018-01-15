@@ -2,12 +2,12 @@ package main
 
 import (
 	"bytes"
-	"encoding/binary"
-	"log"
-	"fmt"
-	"crypto/cipher"
 	"crypto/aes"
+	"crypto/cipher"
+	"encoding/binary"
 	"errors"
+	"fmt"
+	"log"
 )
 
 func Extract(file []byte, pubk []byte) ([]byte, error) {

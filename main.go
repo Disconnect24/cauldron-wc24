@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
 	"flag"
-	"os"
 	"io/ioutil"
+	"log"
+	"os"
 )
 
 var extractedFilePath string
@@ -36,7 +36,10 @@ func main() {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
-	decrypted := Extract(fileToExtract, pubkFile)
+	decrypted, err := Extract(fileToExtract, pubkFile)
+	if err != nil {
+		panic(err)
+	}
 	ioutil.WriteFile(savePath, decrypted, os.ModePerm)
 	log.Print("Done! Saved to " + savePath)
 }
