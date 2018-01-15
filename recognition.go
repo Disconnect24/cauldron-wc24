@@ -9,30 +9,6 @@ import (
 	"crypto/aes"
 )
 
-type ContentHeader struct {
-	Magic          [4]byte
-	Version        uint32
-	_              [4]byte // Most likely filler.
-	EncryptionType uint8
-	_              [3]byte  // more padding
-	_              [32]byte // Reserved?
-	IV             [16]byte
-
-	// Yes, there is more information available for a header.
-	// We only need this much to grab the type and IV.
-	// See also, http://wiibrew.org/wiki/WiiConnect24/WC24_Content
-}
-
-var ContentHeaderMagic = "WC24"
-
-type PubkFormat struct {
-	RSA_public [256]byte
-	_          [256]byte // "RSA Reserved"
-	AES_key    [16]byte
-	_          [16]byte // "AES Reserved"
-}
-
-func Extract(file []byte, pubk []byte) (decrypted []byte) {
 	// The content header is always a certain length, so the file needs to be larger.
 	if 0x140 > len(file) {
 		panic("File seems too small.")
